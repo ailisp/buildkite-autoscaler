@@ -28,7 +28,7 @@ app.post('/', function(req, res){
     const rules = req.body.job.agent_query_rules
     const queueName = rules[0].substring(6)
     const body = {"group_name": queueName}
-    fetch('http://167.71.120.160:5000', { method: "POST", body: JSON.stringify(body)})
+    fetch('http://167.71.120.160:5000/machines', { method: "POST", body: JSON.stringify(body)})
     .then(res => res.json()).then(json => console.log(json))
   }
 
