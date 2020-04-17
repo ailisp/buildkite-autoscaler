@@ -20,7 +20,7 @@ app.post('/', function(req, res){
   }
 
   let buildkiteEvent = req.headers['x-buildkite-event'];
-  let id;
+  let id, machineName;
 
   if (buildkiteEvent == 'job.scheduled') {
     console.log('----------------------Job Scheduled-------------------');
@@ -33,7 +33,8 @@ app.post('/', function(req, res){
       body: JSON.stringify(body),
       headers: { 'Content-Type': 'application/json' }
     })
-    .then(res => res.json()).then(json => console.log(json))
+    .then(res => machineName = res.machine_name)
+    console.log(machineName)
   }
 
   if (buildkiteEvent == 'job.finished') {
