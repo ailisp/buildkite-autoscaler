@@ -1,5 +1,5 @@
 // Expected env settings
-let webhook_token = process.env.WEBHOOK_TOKEN;
+let webhook_token = process.env.WEBHOOK_TOKEN || "75798f26a45424ecb9074d0519d8688f";
 
 let https      = require('https');
 let express    = require('express');
