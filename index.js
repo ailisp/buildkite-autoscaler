@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 app.post('/', function(req, res){
 
-  console.log('Received POST', req.headers, req.body);
+  console.log('Received POST', req.headers);
 
   // Verify token
   if (req.headers['x-buildkite-token'] != webhook_token) {
