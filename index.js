@@ -4,6 +4,7 @@ let webhook_token = process.env.WEBHOOK_TOKEN || "75798f26a45424ecb9074d0519d868
 let https      = require('https');
 let express    = require('express');
 let bodyParser = require('body-parser');
+let fetch      = require('node-fetch')
 
 let app = express();
 app.use(bodyParser.json());
@@ -19,13 +20,17 @@ app.post('/', function(req, res){
   }
 
   let buildkiteEvent = req.headers['x-buildkite-event'];
+  let id;
 
   if (buildkiteEvent == 'job.scheduled') {
     console.log('----------------------Job Scheduled-------------------');
+    id = req.body.job.id
     const rules = req.body.job.agent_query_rules
-    const queueName = rules[0].substring(6)
-    console.log(queueName)
-    }
+    const queueName = rules[0].subbstring(6)
+    const body = {"group_name": queueName}
+    fetch('http://167.71.120.160:5000', { method: "POST", body: JSON.stringify(body)})
+    .then(res => res.json()).then(json => console.log(json))
+  }
 
   if (buildkiteEvent == 'job.finished') {
     console.log('-----------------------Job Finished--------------------')
