@@ -20,14 +20,24 @@ app.post('/', function(req, res){
 
   let buildkiteEvent = req.headers['x-buildkite-event'];
 
-  if (buildkiteEvent == 'job.activated') {
-    console.log('----------------------Job Activating-------------------');
-    console.log(req.body)
-  }
+  if (buildkiteEvent == 'job.scheduled') {
+    console.log('----------------------Job Scheduled-------------------');
+    const rules = req.body.job.agent_query_rules
+    const queueName = rules[0].substring(6)
+    console.log(queueName)
+    }
 
   if (buildkiteEvent == 'job.finished') {
     console.log('-----------------------Job Finished--------------------')
-    console.log(req.body)
+    const rules = req.body.job.agent_query_rules
+    const queueName = rules[0].substring(7)
+    console.log(queueName)
+  }
+
+  if(buildkiteEvent == 'build.finished') {
+    console.log('-----------------------Build Finished-------------------')
+    const state = req.body.build.state
+    console.log(state)
   }
 
   res.send('buildkite process down');
