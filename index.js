@@ -27,14 +27,24 @@ app.post('/', function(req, res){
     id = req.body.job.id
     const rules = req.body.job.agent_query_rules
     const queueName = rules[0].substring(6)
-    const body = { group_name : queueName}
-    fetch('http://167.71.120.160:5000/machines', { 
-      method: "POST", 
-      body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => machineName = res.machine_name)
-    console.log(machineName)
+    if (queueName === "testqueue"){
+      const initScript = `sudo sh -c 'echo deb https://apt.buildkite.com/buildkite-agent stable main > /etc/apt/sources.list.d/buildkite-agent.list'
+                          sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 32A37959C2FA5C3C99EFBC32A79206696452D198
+                          sudo apt-get update && sudo apt-get install -y buildkite-agent
+                          sudo sed -i "s/xxx/563badd9f5be9380cfea98c5959e92d34ca063964c5bba223d/g" /etc/buildkite-agent/buildkite-agent.cfg
+                          sudo echo 'tags="queue=${queueName}"' >> /etc/buildkite-agent/buildkite-agent.cfg
+                          sudo systemctl enable buildkite-agent && sudo systemctl start buildkite-agent
+                          `
+      const body = { group_name : queueName, init_script : initScript}
+      fetch('http://167.71.120.160:5000/machines', { 
+        method: "POST", 
+        body: JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => machineName = JSON.parse(res).machine_name)
+      console.log(machineName)
+    
+    console.error(`queue name is incorrect! ${queueName}`)
   }
 
   if (buildkiteEvent == 'job.finished') {
