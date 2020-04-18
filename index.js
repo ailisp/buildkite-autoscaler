@@ -43,7 +43,7 @@ app.post('/', function(req, res){
       })
       .then(res => machineName = JSON.parse(res).machine_name)
       console.log(machineName)
-    
+    }
     console.error(`queue name is incorrect! ${queueName}`)
   }
 
