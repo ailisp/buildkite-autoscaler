@@ -30,7 +30,7 @@ app.post('/', function(req, res){
     if (queueName === "testqueue"){
       const initScript = `
                         TOKEN="563badd9f5be9380cfea98c5959e92d34ca063964c5bba223d" bash -c "\`curl -sL https://raw.githubusercontent.com/buildkite/agent/master/install.sh\`"
-                        echo 'tags="queue=${queue_name}"' >> ~/.buildkite-agent/bin/buildkite-agent
+                        echo 'tags="queue=${queueName}"' >> ~/.buildkite-agent/bin/buildkite-agent
                         ~/.buildkite-agent/bin/buildkite-agent start
                         `
       const body = { group_name : queueName, init_script : initScript}
