@@ -9,14 +9,15 @@ let fetch      = require('node-fetch')
 let app = express();
 app.use(bodyParser.json());
 
-app.post('/', function(req, res){
+app.post('/', async function(req, res){
 
-  console.log('Received POST', req.headers);
+  console.log('Received POST');
 
   // Verify token
   if (req.headers['x-buildkite-token'] != webhook_token) {
+    console.log(req.headers['x-buildkite-token'])
     console.log("Invalid webhook token");
-    return res.status(401).send('Invalid token');
+    return res.status(401).send('Invalid token', req.headers['x-buildkite-token']);
   }
 
   let buildkiteEvent = req.headers['x-buildkite-event'];
@@ -30,16 +31,23 @@ app.post('/', function(req, res){
     if (queueName === "testqueue"){
       const initScript = `
                         TOKEN="563badd9f5be9380cfea98c5959e92d34ca063964c5bba223d" bash -c "\`curl -sL https://raw.githubusercontent.com/buildkite/agent/master/install.sh\`"
-                        echo 'tags="queue=${queueName}"' >> ~/.buildkite-agent/bin/buildkite-agent
+                        echo >> ~/.buildkite-agent/buildkite-agent.cfg
+                        echo 'tags="queue=${queueName}"' >> ~/.buildkite-agent/buildkite-agent.cfg
                         ~/.buildkite-agent/bin/buildkite-agent start
                         `
       const body = { group_name : queueName, init_script : initScript}
-      fetch('http://167.71.120.160:5000/machines', { 
-        method: "POST", 
-        body: JSON.stringify(body),
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(res => machineName = JSON.parse(res).machine_name)
+      try {
+        const res = await fetch('http://167.71.120.160:5000/machines', { 
+          method: "POST", 
+          body: JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' }
+        })
+        machineName = JSON.parse(res).machine_name
+      } catch (e) {
+        console.error("===")
+        console.error(e)
+      }
+
     }else {
       console.error(`queue name is incorrect! ${queueName}`)
     }
