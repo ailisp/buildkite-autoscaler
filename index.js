@@ -42,9 +42,10 @@ app.post('/', async function(req, res){
           body: JSON.stringify(body),
           headers: { 'Content-Type': 'application/json' }
         })
-        machineName = JSON.parse(res).machine_name
+
+        machineName = (await res.json()).machine_name
       } catch (e) {
-        console.error("===")
+        console.error("=================")
         console.error(e)
       }
 

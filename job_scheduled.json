@@ -1,0 +1,140 @@
+{
+        "event": "job.scheduled",
+        "job": {
+          "id": "6272fd53-43cb-4a04-9697-55e20a8a2a2a",
+          "type": "script",
+          "name": "create loadtest accounts",
+          "step_key": null,
+          "agent_query_rules": [
+            "queue=testqueue"
+          ],
+          "state": "scheduled",
+          "build_url": "https://api.buildkite.com/v2/organizations/nearprotocol/pipelines/deploy-devnet/builds/78",
+          "web_url": "https://buildkite.com/nearprotocol/deploy-devnet/builds/78#6272fd53-43cb-4a04-9697-55e20a8a2a2a",
+          "log_url": "https://api.buildkite.com/v2/organizations/nearprotocol/pipelines/deploy-devnet/builds/78/jobs/6272fd53-43cb-4a04-9697-55e20a8a2a2a/log",
+          "raw_log_url": "https://api.buildkite.com/v2/organizations/nearprotocol/pipelines/deploy-devnet/builds/78/jobs/6272fd53-43cb-4a04-9697-55e20a8a2a2a/log.txt",
+          "artifacts_url": "https://api.buildkite.com/v2/organizations/nearprotocol/pipelines/deploy-devnet/builds/78/jobs/6272fd53-43cb-4a04-9697-55e20a8a2a2a/artifacts",
+          "command": "source ~/.nvm/nvm.sh\nsource ~/.yarn/yarn.sh\ncd loadtest\nnpm i\nnode createAccounts.js",
+          "soft_failed": false,
+          "exit_status": null,
+          "artifact_paths": "",
+          "agent": null,
+          "created_at": "2020-04-18T00:02:40.939Z",
+          "scheduled_at": "2020-04-18T00:02:40.939Z",
+          "runnable_at": "2020-04-18T00:04:22.000Z",
+          "started_at": null,
+          "finished_at": null,
+          "retried": false,
+          "retried_in_job_id": null,
+          "retries_count": null,
+          "parallel_group_index": null,
+          "parallel_group_total": null
+        },
+        "build": {
+          "id": "266641bb-ab28-41e7-a078-91de5febd838",
+          "url": "https://api.buildkite.com/v2/organizations/nearprotocol/pipelines/deploy-devnet/builds/78",
+          "web_url": "https://buildkite.com/nearprotocol/deploy-devnet/builds/78",
+          "number": 78,
+          "state": "running",
+          "blocked": false,
+          "message": "Scheduled build",
+          "commit": "821229efcf7d55702a652eab701f322c5d69c0aa",
+          "branch": "master",
+          "tag": null,
+          "source": "schedule",
+          "creator": null,
+          "created_at": "2020-04-18T00:02:40.932Z",
+          "scheduled_at": "2020-04-18T00:02:40.926Z",
+          "started_at": "2020-04-18T00:02:41.000Z",
+          "finished_at": null,
+          "meta_data": {
+            "buildkite:git:commit": "commit 821229efcf7d55702a652eab701f322c5d69c0aa\nAuthor:     Bo Yao <bo@nearprotocol.com>\nAuthorDate: Thu Apr 16 17:09:11 2020 -0700\nCommit:     Bo Yao <bo@nearprotocol.com>\nCommitDate: Thu Apr 16 17:09:11 2020 -0700\n\n    add deploy ci testnet"
+          },
+          "pull_request": null,
+          "rebuilt_from": null
+        },
+        "pipeline": {
+          "id": "d7bf39ef-1415-4144-85e3-f7480930b4d7",
+          "url": "https://api.buildkite.com/v2/organizations/nearprotocol/pipelines/deploy-devnet",
+          "web_url": "https://buildkite.com/nearprotocol/deploy-devnet",
+          "name": "deploy-devnet",
+          "description": "",
+          "slug": "deploy-devnet",
+          "repository": "https://nearprotocol-ci:9a19d42bf22ad1b81106bfd0c7809c659d056a9a@github.com/nearprotocol/near-ops",
+          "branch_configuration": null,
+          "default_branch": "master",
+          "skip_queued_branch_builds": false,
+          "skip_queued_branch_builds_filter": null,
+          "cancel_running_branch_builds": false,
+          "cancel_running_branch_builds_filter": null,
+          "provider": {
+            "id": "github",
+            "settings": {
+              "trigger_mode": "code",
+              "build_pull_requests": true,
+              "pull_request_branch_filter_enabled": false,
+              "skip_builds_for_existing_commits": false,
+              "skip_pull_request_builds_for_existing_commits": true,
+              "build_pull_request_forks": false,
+              "build_pull_request_ready_for_review": false,
+              "prefix_pull_request_fork_branch_names": true,
+              "build_tags": false,
+              "publish_commit_status": true,
+              "publish_commit_status_per_step": false,
+              "separate_pull_request_statuses": false,
+              "publish_blocked_as_pending": false,
+              "filter_enabled": false,
+              "repository": "nearprotocol/near-ops"
+            },
+            "webhook_url": "https://webhook.buildkite.com/deliver/cc1461ee448b34e1f1eb357eb121b670d138735e5b4ae3f3c4"
+          },
+          "builds_url": "https://api.buildkite.com/v2/organizations/nearprotocol/pipelines/deploy-devnet/builds",
+          "badge_url": "https://badge.buildkite.com/27469f0ae7bb0e2ad31d8e423929da221a12bc065e915db5d8.svg",
+          "created_at": "2020-03-05T20:47:59.783Z",
+          "env": {
+          },
+          "scheduled_builds_count": 0,
+          "running_builds_count": 1,
+          "scheduled_jobs_count": 1,
+          "running_jobs_count": 0,
+          "waiting_jobs_count": 0,
+          "visibility": "private",
+          "steps": [
+            {
+              "type": "script",
+              "name": "deploy",
+              "command": "pip3 install --user -r requirements.txt\r\npython3 deploy-devnet.py",
+              "artifact_paths": "",
+              "branch_configuration": "master",
+              "env": {
+              },
+              "timeout_in_minutes": null,
+              "agent_query_rules": [
+                "queue=cheap"
+              ],
+              "concurrency": null,
+              "parallelism": null
+            },
+            {
+              "type": "waiter"
+            },
+            {
+              "type": "script",
+              "name": "create loadtest accounts",
+              "command": "source ~/.nvm/nvm.sh\r\nsource ~/.yarn/yarn.sh\r\ncd loadtest\r\nnpm i\r\nnode createAccounts.js",
+              "artifact_paths": "",
+              "branch_configuration": "",
+              "env": {
+                "TPS": "30"
+              },
+              "timeout_in_minutes": 55,
+              "agent_query_rules": [
+                "queue=cheap"
+              ],
+              "concurrency": null,
+              "parallelism": null
+            }
+          ]
+        },
+        "sender": null
+}
