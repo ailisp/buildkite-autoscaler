@@ -28,7 +28,7 @@ app.post('/', async function(req, res){
     id = req.body.job.id
     const rules = req.body.job.agent_query_rules
     const queueName = rules[0].substring(6)
-    if (queueName === "testqueue"){
+    if (queueName === "bridge"){
       const initScript = `
                         TOKEN="563badd9f5be9380cfea98c5959e92d34ca063964c5bba223d" bash -c "\`curl -sL https://raw.githubusercontent.com/buildkite/agent/master/install.sh\`"
                         echo >> ~/.buildkite-agent/buildkite-agent.cfg
@@ -38,7 +38,7 @@ app.post('/', async function(req, res){
                         `
       const body = { group_name : queueName, init_script : initScript}
       try {
-        const res = await fetch('http://167.71.120.160:5000/machines', { 
+        const res = await fetch('http://localhost:5000/machines', { 
           method: "POST", 
           body: JSON.stringify(body),
           headers: { 'Content-Type': 'application/json' }
