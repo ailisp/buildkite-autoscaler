@@ -58,16 +58,10 @@ app.post('/', async function(req, res){
 
   if (buildkiteEvent == 'job.finished') {
     console.log('-----------------------Job Finished--------------------')
-    console.log(req.body.job.agent.ip_address)
-    const rules = req.body.job.agent_query_rules
-    const queueName = rules[0].substring(7)
-    console.log(queueName)
-  }
-
-  if(buildkiteEvent == 'build.finished') {
-    console.log('-----------------------Build Finished-------------------')
-    const state = req.body.build.state
-    console.log(state)
+    const ip = req.body.job.agent.ip_address
+    const res = await fetch(`http://localhost:5000/machines/ip/${ip}`, {
+      method: "DELETE"
+    })
   }
 
   res.send('buildkite process down');
