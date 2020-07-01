@@ -58,7 +58,7 @@ app.post('/', async function(req, res){
 
   if (buildkiteEvent == 'job.finished') {
     console.log('-----------------------Job Finished--------------------')
-    console.log(req.body)
+    console.log(req.body.job.agent.ip_address)
     const rules = req.body.job.agent_query_rules
     const queueName = rules[0].substring(7)
     console.log(queueName)
