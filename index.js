@@ -1,5 +1,8 @@
 // Expected env settings
 let webhook_token = process.env.WEBHOOK_TOKEN || "75798f26a45424ecb9074d0519d8688f";
+let queues = process.env.QUEUES || 'bridge,bridge-expensive'
+queues = queues.split(',')
+
 
 let https      = require('https');
 let express    = require('express');
@@ -28,12 +31,12 @@ app.post('/', async function(req, res){
     id = req.body.job.id
     const rules = req.body.job.agent_query_rules
     const queueName = rules[0].substring(6)
-    if (queueName === "bridge"){
+    if (queues.includes(queueName)){
       const initScript = `
-                        TOKEN="563badd9f5be9380cfea98c5959e92d34ca063964c5bba223d" bash -c "\`curl -sL https://raw.githubusercontent.com/buildkite/agent/master/install.sh\`"
                         echo >> ~/.buildkite-agent/buildkite-agent.cfg
                         echo 'tags="queue=${queueName}"' >> ~/.buildkite-agent/buildkite-agent.cfg
                         echo 'disconnect-after-job=true' >> ~/.buildkite-agent/buildkite-agent.cfg
+                        echo 'timestamp-lines=true' >> ~/.buildkite-agent/buildkite-agent.cfg
                         ~/.buildkite-agent/bin/buildkite-agent start
                         `
       const body = { group_name : queueName, init_script : initScript}
