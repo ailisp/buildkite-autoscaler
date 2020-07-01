@@ -33,6 +33,7 @@ app.post('/', async function(req, res){
                         TOKEN="563badd9f5be9380cfea98c5959e92d34ca063964c5bba223d" bash -c "\`curl -sL https://raw.githubusercontent.com/buildkite/agent/master/install.sh\`"
                         echo >> ~/.buildkite-agent/buildkite-agent.cfg
                         echo 'tags="queue=${queueName}"' >> ~/.buildkite-agent/buildkite-agent.cfg
+                        echo 'disconnect-after-job=true' >> ~/.buildkite-agent/buildkite-agent.cfg
                         ~/.buildkite-agent/bin/buildkite-agent start
                         `
       const body = { group_name : queueName, init_script : initScript}
@@ -57,6 +58,7 @@ app.post('/', async function(req, res){
 
   if (buildkiteEvent == 'job.finished') {
     console.log('-----------------------Job Finished--------------------')
+    console.log(req.body)
     const rules = req.body.job.agent_query_rules
     const queueName = rules[0].substring(7)
     console.log(queueName)
