@@ -30,8 +30,13 @@ app.post('/', async function(req, res){
     console.log('----------------------Job Scheduled-------------------');
     id = req.body.job.id
     const rules = req.body.job.agent_query_rules
-    const queueName = rules[0].substring(6)
-    if (queues.includes(queueName)){
+    let queueName = ''
+    for(let r of rules) {
+      if(r.substring(0, 6) === 'queue=') {
+        queueName = r.substring(6)
+      }
+    }
+    if (queueName && queues.includes(queueName)){
       const initScript = `
                         echo >> ~/.buildkite-agent/buildkite-agent.cfg
                         echo 'tags="queue=${queueName}"' >> ~/.buildkite-agent/buildkite-agent.cfg
@@ -48,6 +53,7 @@ app.post('/', async function(req, res){
         })
 
         machineName = (await res.json()).machine_name
+        console.log(machineName)
       } catch (e) {
         console.error("=================")
         console.error(e)
@@ -56,7 +62,6 @@ app.post('/', async function(req, res){
     }else {
       console.error(`queue name is incorrect! ${queueName}`)
     }
-    console.log(machineName)
   }
 
   if (buildkiteEvent == 'job.finished') {
