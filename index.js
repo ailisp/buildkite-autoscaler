@@ -27,16 +27,20 @@ app.post('/', async function(req, res){
   let id, machineName;
 
   if (buildkiteEvent == 'job.scheduled') {
-    console.log('----------------------Job Scheduled-------------------');
+    console.log('----------------------Receive Job from Buildkite-------------------');
     id = req.body.job.id
     const rules = req.body.job.agent_query_rules
     let queueName = ''
     for(let r of rules) {
       if(r.substring(0, 6) === 'queue=') {
         queueName = r.substring(6)
+        break
       }
     }
     if (queueName && queues.includes(queueName)){
+      console.log('Job URL: ' + req.body.job.web_url)
+      console.log('Job Name: ' + req.body.job.name)
+      console.log('Request create a machine in: ' + queueName)
       const initScript = `
                         echo >> ~/.buildkite-agent/buildkite-agent.cfg
                         echo 'tags="queue=${queueName}"' >> ~/.buildkite-agent/buildkite-agent.cfg
@@ -53,23 +57,31 @@ app.post('/', async function(req, res){
         })
 
         machineName = (await res.json()).machine_name
-        console.log(machineName)
+        console.log('Request create machine sent. Machine name: ' + machineName)
       } catch (e) {
-        console.error("=================")
+        console.error("================= Error in request creating machine")
         console.error(e)
       }
 
     }else {
-      console.error(`queue name is incorrect! ${queueName}`)
+      console.log(`Queue name ${queueName} is not managed by buildkite-autoscaler, skipping`)
     }
-  }
-
-  if (buildkiteEvent == 'job.finished') {
-    console.log('-----------------------Job Finished--------------------')
-    const ip = req.body.job.agent.ip_address
-    const res = await fetch(`http://localhost:5000/machines/ip/${ip}`, {
-      method: "DELETE"
-    })
+  } else if (buildkiteEvent == 'job.finished') {
+    console.log('-----------------------Recieve Job Finished from Buildkite--------------------')
+    try {
+      const ip = req.body.job.agent.ip_address
+      const res = await fetch(`http://localhost:5000/machines/ip/${ip}`, {
+        method: "DELETE"
+      })
+      console.log('Job URL: ' + req.body.job.web_url)
+      console.log('Job Name: ' + req.body.job.name)
+      console.log('Agent Name: ' + req.body.agent.name)
+      console.log('Agent IP: ' + ip)
+      console.log('Request delete machine sent. Machine IP: ' + ip)
+    } catch (e) {
+      console.error("================= Error in request deleting machine")
+      console.error(e)
+    }
   }
 
   res.send('buildkite process down');
