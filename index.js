@@ -64,7 +64,7 @@ app.post('/', async function(req, res){
       }
 
     }else {
-      console.log(`Queue name ${queueName} is not managed by buildkite-autoscaler, skipping`)
+      console.log(`Queue name '${queueName}' is not managed by buildkite-autoscaler, skipping`)
     }
   } else if (buildkiteEvent == 'job.finished') {
     console.log('-----------------------Recieve Job Finished from Buildkite--------------------')
