@@ -74,11 +74,11 @@ app.post('/', async function(req, res){
   } else if (buildkiteEvent == 'job.finished') {
     console.log('-----------------------Recieve Job Finished from Buildkite--------------------')
     try {
-      const ip = req.body.job.agent.ip_address
       const rules = req.body.job.agent_query_rules
       let queueName = agentQueue(rules)
 
-      if (queueName && queues.includes(queueName) && ip){
+      if (queueName && queues.includes(queueName) && req.body.job.agent){
+        const ip = req.body.job.agent.ip_address
         const res = await fetch(`http://localhost:5000/machines/ip/${ip}`, {
           method: "DELETE"
         })
