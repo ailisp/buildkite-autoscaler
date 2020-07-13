@@ -75,7 +75,7 @@ app.post('/', async function(req, res){
       })
       console.log('Job URL: ' + req.body.job.web_url)
       console.log('Job Name: ' + req.body.job.name)
-      console.log('Agent Name: ' + req.body.agent.name)
+      console.log('Agent Name: ' + req.body.job.agent.name)
       console.log('Agent IP: ' + ip)
       console.log('Request delete machine sent. Machine IP: ' + ip)
     } catch (e) {
