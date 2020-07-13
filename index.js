@@ -9,13 +9,23 @@ let express    = require('express');
 let bodyParser = require('body-parser');
 let fetch      = require('node-fetch')
 
+const agentQueue = (rules) => {
+  let queueName = ''
+  if (rules) {
+    for(let r of rules) {
+      if(r.substring(0, 6) === 'queue=') {
+        queueName = r.substring(6)
+        break
+      }
+    }
+  }
+  return queueName;
+}
+
 let app = express();
 app.use(bodyParser.json());
 
 app.post('/', async function(req, res){
-
-  console.log('Received POST');
-
   // Verify token
   if (req.headers['x-buildkite-token'] != webhook_token) {
     console.log(req.headers['x-buildkite-token'])
@@ -30,13 +40,8 @@ app.post('/', async function(req, res){
     console.log('----------------------Receive Job from Buildkite-------------------');
     id = req.body.job.id
     const rules = req.body.job.agent_query_rules
-    let queueName = ''
-    for(let r of rules) {
-      if(r.substring(0, 6) === 'queue=') {
-        queueName = r.substring(6)
-        break
-      }
-    }
+    let queueName = agentQueue(rules)
+
     if (queueName && queues.includes(queueName)){
       console.log('Job URL: ' + req.body.job.web_url)
       console.log('Job Name: ' + req.body.job.name)
@@ -70,14 +75,21 @@ app.post('/', async function(req, res){
     console.log('-----------------------Recieve Job Finished from Buildkite--------------------')
     try {
       const ip = req.body.job.agent.ip_address
-      const res = await fetch(`http://localhost:5000/machines/ip/${ip}`, {
-        method: "DELETE"
-      })
-      console.log('Job URL: ' + req.body.job.web_url)
-      console.log('Job Name: ' + req.body.job.name)
-      console.log('Agent Name: ' + req.body.job.agent.name)
-      console.log('Agent IP: ' + ip)
-      console.log('Request delete machine sent. Machine IP: ' + ip)
+      const rules = req.body.job.agent_query_rules
+      let queueName = agentQueue(rules)
+
+      if (queueName && queues.includes(queueName) && ip){
+        const res = await fetch(`http://localhost:5000/machines/ip/${ip}`, {
+          method: "DELETE"
+        })
+        console.log('Job URL: ' + req.body.job.web_url)
+        console.log('Job Name: ' + req.body.job.name)
+        console.log('Agent Name: ' + req.body.job.agent.name)
+        console.log('Agent IP: ' + ip)
+        console.log('Request delete machine sent. Machine IP: ' + ip)
+      } else {
+        console.log(`Queue name '${queueName}' is not managed by buildkite-autoscaler or build didn't scheduled to agent, skipping`)
+      }
     } catch (e) {
       console.error("================= Error in request deleting machine")
       console.error(e)
